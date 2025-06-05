@@ -1,5 +1,6 @@
 package com.kunthea.phoneshop.controller;
 
+import com.kunthea.phoneshop.Mapper.BrandMapper;
 import com.kunthea.phoneshop.util.Mapper;
 import com.kunthea.phoneshop.dto.BrandDTO;
 import com.kunthea.phoneshop.entity.Brand;
@@ -18,30 +19,28 @@ public class BrandController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> create(@RequestBody BrandDTO brandDTO){
-        Brand brand = Mapper.toEntity(brandDTO);
+        Brand brand = BrandMapper.INSTANCE.toBrand(brandDTO);
         brand = brandService.create(brand);
-        BrandDTO reponseDTO = Mapper.toDTO(brand);
-        return ResponseEntity.ok(reponseDTO);
+        return ResponseEntity.ok(BrandMapper.INSTANCE.toBrand(brand));
     }
     @GetMapping("{id}")
     public ResponseEntity<?> getBrand(@PathVariable("id") Integer id){
         Brand brand = brandService.getBrandId(id);
-        BrandDTO reponseDTO = Mapper.toDTO(brand);
+        BrandDTO reponseDTO = BrandMapper.INSTANCE.toBrand(brand);
         return ResponseEntity.ok(reponseDTO);
     }
 
     @PutMapping("{id}")
     public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody BrandDTO brandDTO){
-        Brand UpdateBrand = Mapper.toEntity(brandDTO);
+        Brand UpdateBrand = BrandMapper.INSTANCE.toBrand(brandDTO);
         UpdateBrand = brandService.update(UpdateBrand, id);
-        BrandDTO reponseDTO = Mapper.toDTO(UpdateBrand);
-        return ResponseEntity.ok(reponseDTO);
+        return ResponseEntity.ok(BrandMapper.INSTANCE.toBrand(UpdateBrand));
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Integer id){
         Brand DeleteBrand=brandService.DeleteById(id);
-        BrandDTO reponseDTO = Mapper.toDTO(DeleteBrand);
+        BrandDTO reponseDTO = BrandMapper.INSTANCE.toBrand(DeleteBrand);
         return ResponseEntity.ok(reponseDTO);
     }
 
