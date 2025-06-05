@@ -1,5 +1,6 @@
 package com.kunthea.phoneshop.impl;
-import com.kunthea.phoneshop.util.Mapper;
+import com.kunthea.phoneshop.Mapper.BrandMapper;
+//import com.kunthea.phoneshop.util.Mapper;
 import com.kunthea.phoneshop.dto.BrandDTO;
 import com.kunthea.phoneshop.entity.Brand;
 import com.kunthea.phoneshop.exception.ApiException;
@@ -46,7 +47,7 @@ public class BrandServiceImpl implements BrandService {
     public List<BrandDTO> GetAllBrands() {
         List<Brand> brands = brandRepository.findAll();
         return brands.stream()
-                .map(Mapper::toDTO)
+                .map(brand -> BrandMapper.INSTANCE.toBrand(brand))
                 .collect(Collectors.toList());
 
     }
