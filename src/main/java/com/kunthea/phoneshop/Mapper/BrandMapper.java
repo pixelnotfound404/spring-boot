@@ -4,14 +4,9 @@ import com.kunthea.phoneshop.dto.BrandDTO;
 import com.kunthea.phoneshop.entity.Brand;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
-
-@Mapper
+@Mapper(componentModel = "spring")
 public interface BrandMapper {
-
-
-    BrandMapper INSTANCE = Mappers.getMapper(BrandMapper.class);
 
     @Mapping(source = "branId", target = "id")
     @Mapping(source = "brandName", target = "name")
@@ -19,7 +14,5 @@ public interface BrandMapper {
 
     @Mapping(source = "id", target = "branId")
     @Mapping(source = "name", target = "brandName")
-    BrandDTO toBrand(Brand brand);
-
-
+    BrandDTO toBrandDTO(Brand brand);  // Fixed method name - was toBrand, now toBrandDTO
 }

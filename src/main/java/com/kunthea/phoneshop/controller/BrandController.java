@@ -1,7 +1,6 @@
 package com.kunthea.phoneshop.controller;
 
 import com.kunthea.phoneshop.Mapper.BrandMapper;
-import com.kunthea.phoneshop.util.Mapper;
 import com.kunthea.phoneshop.dto.BrandDTO;
 import com.kunthea.phoneshop.entity.Brand;
 import com.kunthea.phoneshop.service.BrandService;
@@ -10,43 +9,56 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("brands")
 public class BrandController {
     @Autowired
     private BrandService brandService;
+    @Autowired
+    private BrandMapper brandMapper;
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> create(@RequestBody BrandDTO brandDTO){
-        Brand brand = BrandMapper.INSTANCE.toBrand(brandDTO);
+        Brand brand = brandMapper.toBrand(brandDTO);
         brand = brandService.create(brand);
-        return ResponseEntity.ok(BrandMapper.INSTANCE.toBrand(brand));
+        return ResponseEntity.ok(brandMapper.toBrandDTO(brand));
     }
+
     @GetMapping("{id}")
     public ResponseEntity<?> getBrand(@PathVariable("id") Integer id){
         Brand brand = brandService.getBrandId(id);
-        BrandDTO reponseDTO = BrandMapper.INSTANCE.toBrand(brand);
-        return ResponseEntity.ok(reponseDTO);
+        BrandDTO responseDTO = brandMapper.toBrandDTO(brand);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @PutMapping("{id}")
     public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody BrandDTO brandDTO){
-        Brand UpdateBrand = BrandMapper.INSTANCE.toBrand(brandDTO);
-        UpdateBrand = brandService.update(UpdateBrand, id);
-        return ResponseEntity.ok(BrandMapper.INSTANCE.toBrand(UpdateBrand));
+        Brand updateBrand = brandMapper.toBrand(brandDTO);
+        updateBrand = brandService.update(updateBrand, id);
+        return ResponseEntity.ok(brandMapper.toBrandDTO(updateBrand));
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Integer id){
-        Brand DeleteBrand=brandService.DeleteById(id);
-        BrandDTO reponseDTO = BrandMapper.INSTANCE.toBrand(DeleteBrand);
-        return ResponseEntity.ok(reponseDTO);
+        Brand deleteBrand = brandService.DeleteById(id);
+        BrandDTO responseDTO = brandMapper.toBrandDTO(deleteBrand);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping("")
     public ResponseEntity<?> getBrands(){
         List<BrandDTO> brands = brandService.GetAllBrands();
         return ResponseEntity.ok(brands);
+    }
+
+    @GetMapping("filter")
+    public ResponseEntity<?> getBrandByName(@RequestParam("name") String name){
+        List<BrandDTO> list = brandService.getBrand(name)
+                .stream()
+                .map(brand -> brandMapper.toBrandDTO(brand))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(list);
     }
 }

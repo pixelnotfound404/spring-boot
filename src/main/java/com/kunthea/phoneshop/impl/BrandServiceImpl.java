@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 public class BrandServiceImpl implements BrandService {
     @Autowired
     private BrandRepository brandRepository;
+    @Autowired
+    private BrandMapper brandMapper;
 
     @Override
     public Brand create(Brand brand) {
@@ -47,9 +49,14 @@ public class BrandServiceImpl implements BrandService {
     public List<BrandDTO> GetAllBrands() {
         List<Brand> brands = brandRepository.findAll();
         return brands.stream()
-                .map(brand -> BrandMapper.INSTANCE.toBrand(brand))
+                .map(brandMapper::toBrandDTO)
                 .collect(Collectors.toList());
 
+    }
+
+    @Override
+    public List<Brand> getBrand(String BrandName) {
+        return brandRepository.findByNameContaining(BrandName);
     }
 
 
