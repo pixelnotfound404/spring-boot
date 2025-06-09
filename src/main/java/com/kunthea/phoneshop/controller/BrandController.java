@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -26,12 +28,6 @@ public class BrandController {
         return ResponseEntity.ok(brandMapper.toBrandDTO(brand));
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<?> getBrand(@PathVariable("id") Integer id){
-        Brand brand = brandService.getBrandId(id);
-        BrandDTO responseDTO = brandMapper.toBrandDTO(brand);
-        return ResponseEntity.ok(responseDTO);
-    }
 
     @PutMapping("{id}")
     public ResponseEntity<?> update(@PathVariable("id") Integer id, @RequestBody BrandDTO brandDTO){
@@ -47,18 +43,26 @@ public class BrandController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    @GetMapping("")
-    public ResponseEntity<?> getBrands(){
-        List<BrandDTO> brands = brandService.GetAllBrands();
-        return ResponseEntity.ok(brands);
-    }
+//    @GetMapping("")
+//    public ResponseEntity<?> getBrands(){
+//        List<BrandDTO> brands = brandService.GetAllBrands();
+//        return ResponseEntity.ok(brands);
+//    }
 
-    @GetMapping("filter")
-    public ResponseEntity<?> getBrandByName(@RequestParam("name") String name){
-        List<BrandDTO> list = brandService.getBrand(name)
-                .stream()
-                .map(brand -> brandMapper.toBrandDTO(brand))
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(list);
+    @GetMapping
+    public ResponseEntity<?> getBrandByName(@RequestParam Map<String, String> params){
+        if(params.isEmpty()){
+            List<BrandDTO> brands = brandService.GetAllBrands();
+            return ResponseEntity.ok(brands);
+        }
+        List<Brand> brands = brandService.getBrands(params);
+
+        if (!brands.isEmpty()) {
+            // Return only the first brand
+            BrandDTO brandDTO = brandMapper.toBrandDTO(brands.get(0));
+            return ResponseEntity.ok(brandDTO);
+        }
+
+        return ResponseEntity.notFound().build();
     }
 }

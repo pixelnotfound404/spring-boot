@@ -1,16 +1,20 @@
 package com.kunthea.phoneshop.impl;
 import com.kunthea.phoneshop.Mapper.BrandMapper;
 //import com.kunthea.phoneshop.util.Mapper;
+import com.kunthea.phoneshop.Spec.BrandFilter;
+import com.kunthea.phoneshop.Spec.BrandSpec;
 import com.kunthea.phoneshop.dto.BrandDTO;
 import com.kunthea.phoneshop.entity.Brand;
 import com.kunthea.phoneshop.exception.ApiException;
 import com.kunthea.phoneshop.repository.BrandRepository;
 import com.kunthea.phoneshop.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,8 +59,20 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public List<Brand> getBrand(String BrandName) {
-        return brandRepository.findByNameContaining(BrandName);
+    public List<Brand> getBrands(Map<String, String> params) {
+        BrandFilter brandFilter = new BrandFilter();
+
+        if (params.containsKey("name")) {
+            String name=params.get("name");
+            brandFilter.setName(name);
+        }
+
+        if (params.containsKey("id")) {
+            String id =  params.get("id");
+            brandFilter.setId(Integer.parseInt(id));
+        }
+        BrandSpec brandSpec = new BrandSpec(brandFilter);
+        return brandRepository.findAll(brandSpec);
     }
 
 

@@ -14,5 +14,5 @@ public interface BrandMapper {
 
     @Mapping(source = "id", target = "branId")
     @Mapping(source = "name", target = "brandName")
-    BrandDTO toBrandDTO(Brand brand);  // Fixed method name - was toBrand, now toBrandDTO
+    BrandDTO toBrandDTO(Brand brand);
 }

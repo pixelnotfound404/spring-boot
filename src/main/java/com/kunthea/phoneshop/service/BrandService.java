@@ -4,6 +4,7 @@ import com.kunthea.phoneshop.dto.BrandDTO;
 import com.kunthea.phoneshop.entity.Brand;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BrandService {
     Brand create(Brand brand);
@@ -11,5 +12,5 @@ public interface BrandService {
     Brand update(Brand BrandUpdate, Integer id);
     Brand DeleteById(Integer id);
     List<BrandDTO> GetAllBrands();
-    List<Brand> getBrand(String BrandName);
+    List<Brand> getBrands(Map<String, String> params);
 }
