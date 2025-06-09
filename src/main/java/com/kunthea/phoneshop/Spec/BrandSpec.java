@@ -27,7 +27,7 @@ public class BrandSpec implements Specification<Brand> {
             Predicate id = cb.equal(brand.get("id"), brandFilter.getId());
             predicates.add(id);
         }
-        predicates.toArray(new Predicate[0]);
+        //predicates.toArray(new Predicate[0]);
         return cb.and(predicates.toArray(Predicate[]::new));
     }
 }
