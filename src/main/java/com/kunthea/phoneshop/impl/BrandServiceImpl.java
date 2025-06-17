@@ -1,6 +1,5 @@
 package com.kunthea.phoneshop.impl;
 import com.kunthea.phoneshop.Mapper.BrandMapper;
-//import com.kunthea.phoneshop.util.Mapper;
 import com.kunthea.phoneshop.Spec.BrandFilter;
 import com.kunthea.phoneshop.Spec.BrandSpec;
 import com.kunthea.phoneshop.dto.BrandDTO;
