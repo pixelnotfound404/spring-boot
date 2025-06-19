@@ -13,6 +13,5 @@ public interface BrandService {
     Brand update(Brand BrandUpdate, Integer id);
     Brand DeleteById(Integer id);
     List<BrandDTO> GetAllBrands();
-    //List<Brand> getBrands(Map<String, String> params);
     Page<Brand> getBrands(Map<String, String> params);
 }
