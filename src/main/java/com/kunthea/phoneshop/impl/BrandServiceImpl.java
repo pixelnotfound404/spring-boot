@@ -8,10 +8,9 @@ import com.kunthea.phoneshop.exception.ApiException;
 import com.kunthea.phoneshop.repository.BrandRepository;
 import com.kunthea.phoneshop.service.BrandService;
 import com.kunthea.phoneshop.util.PageUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -24,11 +23,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class BrandServiceImpl implements BrandService {
-    @Autowired
-    private BrandRepository brandRepository;
-    @Autowired
-    private BrandMapper brandMapper;
+    private final BrandRepository brandRepository;
+    private final BrandMapper brandMapper;
 
     @Override
     public Brand create(Brand brand) {
