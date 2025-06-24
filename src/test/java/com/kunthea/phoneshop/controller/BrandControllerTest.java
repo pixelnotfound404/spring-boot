@@ -11,25 +11,25 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.hamcrest.Matchers.hasSize;
+
+import java.util.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 @ExtendWith(MockitoExtension.class)
 public class BrandControllerTest {
@@ -78,26 +78,32 @@ public class BrandControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.branId").value(1))
-                .andExpect(jsonPath("$.brandName").value("Nokia"));
+                .andExpect(jsonPath("$.brandName").value("Nokia"))
+                .andDo(result -> {
+                    // Additional MockMvc-based assertions if needed
+                    String responseContent = result.getResponse().getContentAsString();
+                    System.out.println("Response: " + responseContent);
+                });
     }
 
     @Test
     public void testUpdateBrand() throws Exception {
+        // Given
         Integer brandId = 1;
         BrandDTO inputBrandDTO = new BrandDTO();
-        inputBrandDTO.setBrandName("Nokia");
+        inputBrandDTO.setBrandName("Updated Nokia");
         inputBrandDTO.setBranId(1);
 
         Brand mappedBrand = new Brand();
-        mappedBrand.setName("Nokia");
+        mappedBrand.setName("Updated Nokia");
         mappedBrand.setId(1);
 
         Brand updatedBrand = new Brand();
-        updatedBrand.setName("Nokia");
+        updatedBrand.setName("Updated Nokia");
         updatedBrand.setId(1);
 
         BrandDTO outputBrandDTO = new BrandDTO();
-        outputBrandDTO.setBrandName("Nokia");
+        outputBrandDTO.setBrandName("Updated Nokia");
         outputBrandDTO.setBranId(1);
 
         // Mock behavior - Note: Based on your original method signature, it should be update(Brand, Integer)
@@ -112,55 +118,121 @@ public class BrandControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.branId").value(1))
-                .andExpect(jsonPath("$.brandName").value("Nokia"));
+                .andExpect(jsonPath("$.brandName").value("Updated Nokia"));
 
         // Verify interactions
         verify(brandMapper).toBrand(any(BrandDTO.class));
         verify(brandService).update(any(Brand.class), eq(brandId));
         verify(brandMapper).toBrandDTO(any(Brand.class));
-
     }
+
+    @Test
+    public void testUpdateBrand_Success() throws Exception {
+        // Given
+        Integer brandId = 2;
+        BrandDTO inputBrandDTO = new BrandDTO();
+        inputBrandDTO.setBrandName("Samsung");
+
+        Brand mappedBrand = new Brand();
+        mappedBrand.setName("Samsung");
+
+        Brand updatedBrand = new Brand();
+        updatedBrand.setId(brandId);
+        updatedBrand.setName("Samsung");
+
+        BrandDTO responseBrandDTO = new BrandDTO();
+        responseBrandDTO.setBranId(brandId);
+        responseBrandDTO.setBrandName("Samsung");
+
+        // When
+        when(brandMapper.toBrand(inputBrandDTO)).thenReturn(mappedBrand);
+        when(brandService.update(mappedBrand, brandId)).thenReturn(updatedBrand);
+        when(brandMapper.toBrandDTO(updatedBrand)).thenReturn(responseBrandDTO);
+
+        // Then
+        mockMvc.perform(put("/brands/{id}", brandId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(inputBrandDTO)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.branId").value(brandId))
+                .andExpect(jsonPath("$.brandName").value("Samsung"));
+
+        verify(brandMapper).toBrand(inputBrandDTO);
+        verify(brandService).update(mappedBrand, brandId);
+        verify(brandMapper).toBrandDTO(updatedBrand);
+    }
+
+    @Test
+    public void testUpdateBrand_InvalidJson() throws Exception {
+        // Given
+        Integer brandId = 1;
+        String invalidJson = "{ invalid json }";
+
+        // When & Then
+        mockMvc.perform(put("/brands/{id}", brandId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(invalidJson))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void testUpdateBrand_EmptyBody() throws Exception {
+        // Given
+        Integer brandId = 1;
+
+        // When & Then
+        mockMvc.perform(put("/brands/{id}", brandId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isOk()); // Assuming empty body is handled gracefully
+    }
+
 
 
     @Test
     public void testDeleteBrand() throws Exception {
+        // Given
         Integer brandId = 1;
 
-
-        Brand deleteBrand = new Brand();
-        deleteBrand.setName("Nokia");
-        deleteBrand.setId(1);
+        Brand deletedBrand = new Brand();
+        deletedBrand.setName("Nokia");
+        deletedBrand.setId(1);
 
         BrandDTO outputBrandDTO = new BrandDTO();
         outputBrandDTO.setBrandName("Nokia");
         outputBrandDTO.setBranId(1);
 
-        when(brandService.DeleteById(eq(brandId))).thenReturn(deleteBrand);
+        // Mock behavior - Only mock what's actually called
+        when(brandService.DeleteById(eq(brandId))).thenReturn(deletedBrand);
         when(brandMapper.toBrandDTO(any(Brand.class))).thenReturn(outputBrandDTO);
 
+        // When & Then
         mockMvc.perform(delete("/brands/{id}", brandId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.branId").value(1))
                 .andExpect(jsonPath("$.brandName").value("Nokia"));
 
+        // Verify only the methods that are actually called
         verify(brandService).DeleteById(brandId);
         verify(brandMapper).toBrandDTO(any(Brand.class));
+        // Don't verify brandMapper.toBrand() since it's not called in delete operation
     }
 
     @Test
     public void testGetBrands_EmptyParams_ReturnsAllBrands() throws Exception {
-
+        // Given
         List<BrandDTO> allBrands = Arrays.asList(
                 createBrandDTO(1, "Nokia"),
                 createBrandDTO(2, "Samsung"),
                 createBrandDTO(3, "Apple")
         );
 
-
+        // Mock behavior
         when(brandService.GetAllBrands()).thenReturn(allBrands);
 
-
+        // When & Then
         mockMvc.perform(get("/brands"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -192,12 +264,12 @@ public class BrandControllerTest {
         BrandDTO brandDTO1 = createBrandDTO(1, "Nokia");
         BrandDTO brandDTO2 = createBrandDTO(2, "Samsung");
 
-
+        // Mock behavior
         when(brandService.getBrands(any(Map.class))).thenReturn(brandPage);
         when(brandMapper.toBrandDTO(brand1)).thenReturn(brandDTO1);
         when(brandMapper.toBrandDTO(brand2)).thenReturn(brandDTO2);
 
-
+        // When & Then
         mockMvc.perform(get("/brands")
                         .param("page", "0")
                         .param("size", "10"))
@@ -216,13 +288,13 @@ public class BrandControllerTest {
 
     @Test
     public void testGetBrands_WithParams_EmptyResults_ReturnsNotFound() throws Exception {
-
+        // Given
         Page<Brand> emptyPage = Page.empty();
 
-
+        // Mock behavior
         when(brandService.getBrands(any(Map.class))).thenReturn(emptyPage);
 
-
+        // When & Then
         mockMvc.perform(get("/brands")
                         .param("name", "NonExistentBrand"))
                 .andExpect(status().isNotFound());
@@ -279,11 +351,32 @@ public class BrandControllerTest {
         verify(brandService).GetAllBrands();
     }
 
-
+    // Helper method to create BrandDTO
     private BrandDTO createBrandDTO(Integer id, String name) {
         BrandDTO brandDTO = new BrandDTO();
         brandDTO.setBranId(id);
         brandDTO.setBrandName(name);
         return brandDTO;
+    }
+
+    @Test
+    public void getBrandById() throws Exception {
+        Brand brand = new Brand();
+        brand.setId(1);
+        brand.setName("iPhone");
+
+        BrandDTO brandDTO = new BrandDTO();
+        brandDTO.setBranId(1);
+        brandDTO.setBrandName("iPhone");
+
+        when(brandMapper.toBrandDTO(brand)).thenReturn(brandDTO);
+        when(brandService.getBrandId(any(Integer.class))).thenReturn(brand);
+
+        mockMvc.perform(get("/brands/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.branId").value(1))
+                .andExpect(jsonPath("$.brandName").value("iPhone"));
+        verify(brandService).getBrandId(any(Integer.class));
     }
 }

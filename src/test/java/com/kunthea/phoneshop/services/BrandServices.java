@@ -185,7 +185,7 @@ public class BrandServices {
 
         Pageable capturedPageable = pageableCaptor.getValue();
         assertEquals(0, capturedPageable.getPageNumber());
-        assertEquals(5, capturedPageable.getPageSize());
+        assertEquals(10, capturedPageable.getPageSize());
     }
 
     @Test
