@@ -8,8 +8,9 @@ import com.kunthea.phoneshop.exception.ApiException;
 import com.kunthea.phoneshop.repository.BrandRepository;
 import com.kunthea.phoneshop.service.BrandService;
 import com.kunthea.phoneshop.util.PageUtil;
+import jdk.jfr.Name;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mapstruct.Named;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -34,10 +35,12 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
+    @Named("getBrandId")
     public Brand getBrandId(Integer brandId) {
         return brandRepository.findById(brandId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Brand not found with ID: " + brandId));
     }
+
 
     @Override
     public Brand update(Brand BrandUpdate, Integer id) {
