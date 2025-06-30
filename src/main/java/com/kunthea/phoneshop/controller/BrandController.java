@@ -4,6 +4,7 @@ import com.kunthea.phoneshop.Mapper.BrandMapper;
 import com.kunthea.phoneshop.dto.BrandDTO;
 import com.kunthea.phoneshop.entity.Brand;
 import com.kunthea.phoneshop.service.BrandService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,10 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("brands")
+@RequiredArgsConstructor
 public class BrandController {
-    @Autowired
-    private BrandService brandService;
-    @Autowired
-    private BrandMapper brandMapper;
+    private final BrandService brandService;
+    private final  BrandMapper brandMapper;
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> create(@RequestBody BrandDTO brandDTO){

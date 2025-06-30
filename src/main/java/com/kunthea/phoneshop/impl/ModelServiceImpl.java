@@ -1,15 +1,12 @@
 package com.kunthea.phoneshop.impl;
 
-import com.kunthea.phoneshop.Mapper.ModelMapper;
+import com.kunthea.phoneshop.Mapper.ModelsMapper;
 import com.kunthea.phoneshop.dto.ModelDTO;
 import com.kunthea.phoneshop.entity.Model;
 import com.kunthea.phoneshop.exception.ApiException;
 import com.kunthea.phoneshop.repository.ModelRepository;
-import com.kunthea.phoneshop.service.BrandService;
 import com.kunthea.phoneshop.service.ModelService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ModelServiceImpl implements ModelService {
     private final ModelRepository modelRepository;
-    private final ModelMapper modelMapper;
+    private final ModelsMapper modelEntityMapper;
 
 
     @Override
@@ -52,7 +49,7 @@ public class ModelServiceImpl implements ModelService {
     public List<ModelDTO> getAllModels() {
         List<Model> models = modelRepository.findAll();
         return models.stream()
-                .map(modelMapper::toModelDTO)
+                .map(modelEntityMapper::toModelDTO)
                 .collect(Collectors.toList());
     }
 }
