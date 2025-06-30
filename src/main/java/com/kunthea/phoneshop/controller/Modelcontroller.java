@@ -37,14 +37,7 @@ public class Modelcontroller {
 
     @PutMapping("{id}")
     public ResponseEntity<?> updateModel(@PathVariable("id") Integer id, @RequestBody ModelDTO modelDTO){
-        System.out.println("=== UPDATE DEBUG ===");
-        System.out.println("Path ID: " + id);
-        System.out.println("ModelDTO branId: " + modelDTO.getBranId());
-        System.out.println("ModelDTO modelName: " + modelDTO.getModelName());
-
         Model updateModel = modelMapper.toModel(modelDTO);
-        System.out.println("Mapped Model brand: " + (updateModel.getBrand() != null ? updateModel.getBrand().getId() : "NULL"));
-
         updateModel = modelService.update(updateModel, id);
         return ResponseEntity.ok(modelMapper.toModelDTO(updateModel));
     }
