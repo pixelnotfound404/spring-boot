@@ -49,8 +49,8 @@ public class Modelcontroller {
         return ResponseEntity.ok(modelDTO);
     }
 
-    @GetMapping("")
-    public ResponseEntity<?> getModels(){
+    @GetMapping
+    public ResponseEntity<?> getAllModels(){
         List<ModelDTO> getAllModels = modelService.getAllModels();
         return ResponseEntity.ok(getAllModels);
     }
