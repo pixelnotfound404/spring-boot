@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 
-@Mapper(componentModel = "spring", uses = {BrandService.class})
+@Mapper(componentModel = "spring", uses = {BrandService.class, BrandMapper.class})
 public interface ModelsMapper {
 
     @Mapping(source = "modelName", target = "name")

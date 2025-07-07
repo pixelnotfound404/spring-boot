@@ -14,10 +14,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("models")
-public class Modelcontroller {
+public class ModelController {
 
     private  final ModelService modelService;
-
     private  final ModelsMapper modelEntityMapper;
 
     @RequestMapping(method = RequestMethod.POST)

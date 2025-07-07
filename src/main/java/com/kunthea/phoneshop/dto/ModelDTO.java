@@ -6,4 +6,5 @@ import lombok.Data;
 public class ModelDTO {
     private String modelName;
     private Integer branId;
+    private BrandDTO brand;
 }
