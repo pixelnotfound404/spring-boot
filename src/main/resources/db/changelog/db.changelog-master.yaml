@@ -1,3 +1,7 @@
 databaseChangeLog:
   - include:
       - file: db/changelog/001_init_db_structure.yml
+  - include:
+      - file: db/changelog/002_create_table_color.yml
+  - include:
+      - file: db/changelog/003_add_new_table_product.yml

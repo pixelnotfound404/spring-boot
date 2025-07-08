@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003_create_products_table
+      author: sokuntheasom0@gmail.com
+      changes:
+        - createTable:
+            tableName: products
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  name: img
+                  type: VARCHAR(255)
+              - column:
+                  name: price
+                  type: DECIMAL(10,2)
+              - column:
+                  name: stock
+                  type: bigint
+              - column:
+                  name: color_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_products_color
+                    references: colors(id)
+              - column:
+                  name: model_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: fk_products_model
+                    references: models(id)

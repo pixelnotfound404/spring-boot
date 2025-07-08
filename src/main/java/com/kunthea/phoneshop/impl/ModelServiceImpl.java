@@ -7,6 +7,7 @@ import com.kunthea.phoneshop.exception.ApiException;
 import com.kunthea.phoneshop.repository.ModelRepository;
 import com.kunthea.phoneshop.service.ModelService;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.Named;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 

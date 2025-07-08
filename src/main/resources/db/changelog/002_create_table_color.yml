@@ -1,26 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 001_init_db_structure
+      id: 002
       author: sokuntheasom0@gmail.com
       changes:
         - createTable:
-            tableName: brands
-            columns:
-              - column:
-                  name: brand_id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: brand_name
-                  type: varchar(250)
-                  constraints:
-                    nullable: false
-
-        - createTable:
-            tableName: models
+            tableName: colors
             columns:
               - column:
                   name: id
@@ -38,5 +22,5 @@ databaseChangeLog:
                   name: brandid
                   type: BIGINT
                   constraints:
-                    foreignKeyName: fk_models_brands
+                    foreignKeyName: fk_colors_brands
                     references: brands(brand_id)

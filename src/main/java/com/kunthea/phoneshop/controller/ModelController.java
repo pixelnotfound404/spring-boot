@@ -21,7 +21,6 @@ public class ModelController {
 
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> createModel(@RequestBody ModelDTO modelDTO) {
-
         Model model = modelEntityMapper.toModel(modelDTO);
         model = modelService.save(model);
         return ResponseEntity.ok().body(model);
